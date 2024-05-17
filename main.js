@@ -11,13 +11,13 @@ function handleFormSubmit(event) {
 
     const editBtn = document.createElement('button');
     editBtn.className = 'edit-btn';
-    editBtn.textContent = 'edit';
+    editBtn.textContent = 'Edit Expense';
     editBtn.id = description;
     user.appendChild(editBtn);
 
     const deleteBtn = document.createElement('button');
     deleteBtn.className = 'delete-btn';
-    deleteBtn.textContent = 'delete';
+    deleteBtn.textContent = 'Delete Expense';
     deleteBtn.id = description;
     user.appendChild(deleteBtn);
 
