@@ -5,28 +5,33 @@
   <meta charset="UTF-8" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Document</title>
+  <title>bootstrap learning</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+  <link rel="stylesheet" href="style.css" />
 </head>
-
-<body style="margin: 0">
-  <form onsubmit="handleFormSubmit(event)">
-    <label for="amount">Enter Expense amount:=></label>
-    <input type="number" name="expenseamount" id="expenseamount" />
-    <label for="description">Enter description:=></label>
-    <input type="text" name="expensedescription" id="expensedescription" />
-    <label for="expensecategory">Category:=></label>
-      <select name="expensecategory" id="expensecategory">
-        <option value="food">Food</option>
-        <option value="clothing">Clothing</option>
-        <option value="entertainment">Entertainment</option>
-        <option value="transportation">Transportation</option>
-        <option value="other">Other</option>
-      </select>
+<body>
+  <div class="container">
+<form>
+  <div class="form-check form-switch form-check-inline">
+    <label for="email" class="form-check-label">Email</label>
+    <input type="checkbox" class="form-check-input"/>
+  </div>
+  <div class="form-check form-switch form-check-inline">
+    <label for="email" class="form-check-label ">Email</label>
+    <input type="checkbox" class="form-check-input"/>
+  </div>
+  <div class="form-check form-switch form-check-inline">
+    <label for="email" class="form-check-label">Email</label>
+    <input type="checkbox" class="form-check-input"/>
+  </div>
+  
+</form>
    
-    <button type="submit">Submit</button>
-  </form>
-  <ul class='users'></ul>
+    
+   </div>
+
+  
 </body>
 <script src="main.js"></script>
-
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
 </html>
