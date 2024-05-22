@@ -12,29 +12,21 @@
 <body>
   <div class="container">
   <form novalidate>
-    <!-- 
-// compulsor cond: label should always be afte the input 
-  2} input should always have a placeholder
-    -->
-
+  
 
 
     <div class="form-floating ">
      
     <input type="email" id="email" class="form-control" placeholder="enter emai here" required>
     <label for="email" class="form-label">Email</label>
+    <!-- 1} first time when the submit button is clicked 'was-validated' class is added and invalid&valid feedback class starts to work
+         2} feedback class always after the input 
+    -->
+    <div class="invalid-feedback">invalid email</div>
+    <div class="valid-feedback">valid email</div>
   </div>
     
-    <button class="btn btn-primary  ">Submit</button>
-
-
-
-
-
-
-
-
-
+    <button class="btn btn-primary">Submit</button>
     </form>
   </div>
 
