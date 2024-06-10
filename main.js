@@ -1,22 +1,158 @@
+function handleFormSubmit(event) {
+  event.preventDefault();
+  const userDetails = {
+    username: event.target.username.value,
+    email: event.target.email.value,
+    phone: event.target.phone.value,
+  };
+  axios
+    .post(
+      "https://crudcrud.com/api/48674422bf3342e6a6466b71f7cd5c2f/todo",
+      userDetails
+    )
+    .then((obj) => displayUserOnScreen(obj.data))
+    .catch((error) => console.log(error));
+
+  // Clearing the input fields
+  document.getElementById("username").value = "";
+  document.getElementById("email").value = "";
+  document.getElementById("phone").value = "";
+}
+
+
+// after post , get, delete,edit this runs 
+function displayUserOnScreen(userDetails) {
+  const userItem = document.createElement("li");
+  userItem.classList.add(userDetails._id)
+  userItem.appendChild(
+    document.createTextNode(
+      `${userDetails.username} - ${userDetails.email} - ${userDetails.phone}`
+    )
+  );
+
+  const deleteBtn = document.createElement("button");
+  deleteBtn.appendChild(document.createTextNode("Delete"));
+  userItem.appendChild(deleteBtn);
+
+  const editBtn = document.createElement("button");
+  editBtn.appendChild(document.createTextNode("Edit"));
+  userItem.appendChild(editBtn);
+
+  const userList = document.querySelector("ul");
+  userList.appendChild(userItem);
+
+  deleteBtn.addEventListener("click", function (event) {
+    axios.delete(`https://crudcrud.com/api/48674422bf3342e6a6466b71f7cd5c2f/todo/${userDetails._id}`)
+    userList.removeChild(event.target.parentElement);
+   
+  });
+
+  editBtn.addEventListener("click", function (event) {
+    // BY Using id after the endpoint  the object is returned from get request
+   axios.get(`https://crudcrud.com/api/48674422bf3342e6a6466b71f7cd5c2f/todo/${userDetails._id}`).then((response)=>{
+    document.getElementById("username").value = response.data.username;
+    document.getElementById("email").value = response.data.email;
+    document.getElementById("phone").value = response.data.phone;
+    axios.delete(`https://crudcrud.com/api/48674422bf3342e6a6466b71f7cd5c2f/todo/${userDetails._id}`)
+    userList.removeChild(event.target.parentElement);
+   })
+   .catch((error)=>{console.log(error)
+   })
+    
+  });
+}
+
+/// for page refresh
+
+window.addEventListener("DOMContentLoaded", function(event) {
+   // BY Using directly endpoint the Array is returned from get request
+  axios.get("https://crudcrud.com/api/48674422bf3342e6a6466b71f7cd5c2f/todo")
+  .then((Array)=>{
+    Array.data.forEach((userDetails) => {
+      displayUserOnScreen(userDetails);
+    });})
+    .catch((error)=>{
+    console.log(error)
+  })
+});
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+// Do not touch code below
+
+
+
+
+
+
+
+
+
+
+
+
+
+// const timer1 = setTimeout(() => {
+
+//   console.log('timer1');
+
+  
+
+//   const promise1 = Promise.resolve().then(() => {
+
+//     console.log('promise1')
+
+//   })
+
+// }, 0)
+
+
+
+// const timer2 = setTimeout(() => {
+
+//    console.log('timer2')
+
+// }, 0)
+
+
+
 
 // if true form will be submitted and will get refreshed 
 // if false form will not be submitted 
 //  after first submission was-validated class will be added 
 
 
-const form = document.querySelector('form');
-form.addEventListener('submit', (event) => {
-if(!form.checkValidity()){
-event.preventDefault();
-console.log('form not submitted')
-}
-else {
-  console.log('form submitted')
-}
-form.classList.add('was-validated')
+// const form = document.querySelector('form');
+// form.addEventListener('submit', (event) => {
+// if(!form.checkValidity()){
+// event.preventDefault();
+// console.log('form not submitted')
+// }
+// else {
+//   console.log('form submitted')
+// }
+// form.classList.add('was-validated')
 
 
-});
+// });
 
 
 
