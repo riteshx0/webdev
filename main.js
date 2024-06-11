@@ -1,3 +1,5 @@
+
+
 function handleFormSubmit(event) {
   event.preventDefault();
   const userDetails = {
@@ -42,25 +44,37 @@ function displayUserOnScreen(userDetails) {
   userList.appendChild(userItem);
 
   deleteBtn.addEventListener("click", function (event) {
-    axios.delete(`https://crudcrud.com/api/48674422bf3342e6a6466b71f7cd5c2f/todo/${userDetails._id}`)
-    userList.removeChild(event.target.parentElement);
-   
+    handleDelete(userDetails._id,userItem)
   });
 
   editBtn.addEventListener("click", function (event) {
-    // BY Using id after the endpoint  the object is returned from get request
-   axios.get(`https://crudcrud.com/api/48674422bf3342e6a6466b71f7cd5c2f/todo/${userDetails._id}`).then((response)=>{
-    document.getElementById("username").value = response.data.username;
-    document.getElementById("email").value = response.data.email;
-    document.getElementById("phone").value = response.data.phone;
-    axios.delete(`https://crudcrud.com/api/48674422bf3342e6a6466b71f7cd5c2f/todo/${userDetails._id}`)
-    userList.removeChild(event.target.parentElement);
-   })
-   .catch((error)=>{console.log(error)
-   })
-    
-  });
+    document.getElementById("username").value = userDetails.username;
+    document.getElementById("email").value = userDetails.email;
+    document.getElementById("phone").value = userDetails.phone;   
+  
+   handleDelete(userDetails._id,userItem);
+})
 }
+
+ function handleDelete(userId, userItem){
+  axios.delete(`https://crudcrud.com/api/48674422bf3342e6a6466b71f7cd5c2f/todo/${userId}`)
+  .then(()=>{
+  
+const userList = document.querySelector("ul");
+userList.removeChild(userItem) // accessing userItem directly
+
+  }).catch((err)=>{
+    showError(err)
+  })
+ }
+
+ // Function to show errors
+function showError(error) {
+  console.log(error);
+  document.body.innerHTML += "<h4>An error occurred</h4>";
+}
+
+
 
 /// for page refresh
 
