@@ -1,269 +1,128 @@
 
+let blogCount = 0;
 
+// Function to handle form submission
 function handleFormSubmit(event) {
   event.preventDefault();
-  const userDetails = {
-    username: event.target.username.value,
-    email: event.target.email.value,
-    phone: event.target.phone.value,
+  
+  // the object made from input field values 
+  const imageDetails = {
+    imageUrl: event.target.imageUrl.value,
+    imageTitle: event.target.imageTitle.value,
+    imageDescription: event.target.imageDescription.value,
   };
+  
+  // post request for every new post createadd
   axios
     .post(
-      "https://crudcrud.com/api/48674422bf3342e6a6466b71f7cd5c2f/todo",
-      userDetails
+      "https://crudcrud.com/api/915a3762f9f84d23a9a658a8c27a5459/images",
+      imageDetails
     )
-    .then((obj) => displayUserOnScreen(obj.data))
-    .catch((error) => console.log(error));
-
-  // Clearing the input fields
-  document.getElementById("username").value = "";
-  document.getElementById("email").value = "";
-  document.getElementById("phone").value = "";
+    .then((response) => {
+      // response is a simple object 
+      displayUserOnScreen(response.data);
+      // incrementing the blog count
+      updateBlogCount(1)
+      clearForm();
+    })
+    .catch((error) => {
+      showError(error);
+    });
 }
 
+// Function to clear the form fields
+function clearForm() {
+  document.getElementById("url").value = "";
+  document.getElementById("title").value = "";
+  document.getElementById("description").value = "";
+}
 
-// after post , get, delete,edit this runs 
-function displayUserOnScreen(userDetails) {
-  const userItem = document.createElement("li");
-  userItem.classList.add(userDetails._id)
-  userItem.appendChild(
-    document.createTextNode(
-      `${userDetails.username} - ${userDetails.email} - ${userDetails.phone}`
-    )
-  );
+// Function to display image details on screen
+function displayUserOnScreen(imageDetails) {
+  const imageItem = document.createElement("li");
+  // 3 post on every row 
+  imageItem.classList.add("col-md-4", "mb-4", "blog-post");
 
+  const titleOfImage = document.createElement("h4");
+  titleOfImage.innerText = imageDetails.imageTitle;
+
+  const img = document.createElement("img");
+  img.src = imageDetails.imageUrl;
+  // 100% width of image compare to parent element
+  img.classList.add("img-fluid")
+
+  const descriptionOfImage = document.createElement("p");
+  descriptionOfImage.innerText = imageDetails.imageDescription;
+
+  imageItem.appendChild(titleOfImage);
+  imageItem.appendChild(img);
+  imageItem.appendChild(descriptionOfImage);
+  
   const deleteBtn = document.createElement("button");
+  deleteBtn.className = "btn btn-danger";
   deleteBtn.appendChild(document.createTextNode("Delete"));
-  userItem.appendChild(deleteBtn);
+  deleteBtn.classList.add("btn-danger");  
+  imageItem.appendChild(deleteBtn);
 
   const editBtn = document.createElement("button");
+  editBtn.className = "btn btn-primary";
   editBtn.appendChild(document.createTextNode("Edit"));
-  userItem.appendChild(editBtn);
+  editBtn.classList.add("btn-primary");
+  imageItem.appendChild(editBtn);
 
-  const userList = document.querySelector("ul");
-  userList.appendChild(userItem);
+  const imageList = document.querySelector("ul");
+  // newly added post on top of page
+  imageList.insertBefore(imageItem,imageList.firstChild);
 
-  deleteBtn.addEventListener("click", function (event) {
-    handleDelete(userDetails._id,userItem)
+  deleteBtn.addEventListener("click", function () {
+    handleDelete(imageDetails._id, imageItem);
   });
 
-  editBtn.addEventListener("click", function (event) {
-    document.getElementById("username").value = userDetails.username;
-    document.getElementById("email").value = userDetails.email;
-    document.getElementById("phone").value = userDetails.phone;   
-  
-   handleDelete(userDetails._id,userItem);
-})
+  editBtn.addEventListener("click", function () {
+    document.getElementById("url").value = imageDetails.imageUrl;
+    document.getElementById("title").value = imageDetails.imageTitle;
+    document.getElementById("description").value = imageDetails.imageDescription;
+    
+    handleDelete(imageDetails._id, imageItem);
+  });
 }
 
- function handleDelete(userId, userItem){
-  axios.delete(`https://crudcrud.com/api/48674422bf3342e6a6466b71f7cd5c2f/todo/${userId}`)
-  .then(()=>{
-  
-const userList = document.querySelector("ul");
-userList.removeChild(userItem) // accessing userItem directly
+// Function to handle deletion of image details
+function handleDelete(imageId, imageItem) {
+  axios.delete(`https://crudcrud.com/api/915a3762f9f84d23a9a658a8c27a5459/images/${imageId}`)
+    .then(() => {
+      const imageList = document.querySelector("ul");
+      imageList.removeChild(imageItem);
+      updateBlogCount(-1)
+    })
+    .catch((err) => {
+      showError(err);
+    });
+}
 
-  }).catch((err)=>{
-    showError(err)
-  })
- }
-
- // Function to show errors
+// Function to show errors
 function showError(error) {
   console.log(error);
   document.body.innerHTML += "<h4>An error occurred</h4>";
 }
+// blog count update
+function updateBlogCount(change) {
+  blogCount += change;
+  document.getElementById("blogCount").innerText = `Number of Blogs: ${blogCount}`;
+}
 
-
-
-/// for page refresh
-
-window.addEventListener("DOMContentLoaded", function(event) {
-   // BY Using directly endpoint the Array is returned from get request
-  axios.get("https://crudcrud.com/api/48674422bf3342e6a6466b71f7cd5c2f/todo")
-  .then((Array)=>{
-    Array.data.forEach((userDetails) => {
-      displayUserOnScreen(userDetails);
-    });})
-    .catch((error)=>{
-    console.log(error)
-  })
+// Load existing blog posts from the database
+window.addEventListener("DOMContentLoaded", function () {
+  axios.get("https://crudcrud.com/api/915a3762f9f84d23a9a658a8c27a5459/images")
+    .then((response) => {
+      response.data.forEach((imageDetails) => {
+        displayUserOnScreen(imageDetails);
+      
+      });
+      blogCount = response.data.length;
+      updateBlogCount(0)
+    })
+    .catch((error) => {
+      console.log(error);
+    });
 });
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-// Do not touch code below
-
-
-
-
-
-
-
-
-
-
-
-
-
-// const timer1 = setTimeout(() => {
-
-//   console.log('timer1');
-
-  
-
-//   const promise1 = Promise.resolve().then(() => {
-
-//     console.log('promise1')
-
-//   })
-
-// }, 0)
-
-
-
-// const timer2 = setTimeout(() => {
-
-//    console.log('timer2')
-
-// }, 0)
-
-
-
-
-// if true form will be submitted and will get refreshed 
-// if false form will not be submitted 
-//  after first submission was-validated class will be added 
-
-
-// const form = document.querySelector('form');
-// form.addEventListener('submit', (event) => {
-// if(!form.checkValidity()){
-// event.preventDefault();
-// console.log('form not submitted')
-// }
-// else {
-//   console.log('form submitted')
-// }
-// form.classList.add('was-validated')
-
-
-// });
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-//   function handleFormSubmit(event) {
-//     event.preventDefault();
-
-//     const amount = event.target.expenseamount.value;
-//     const description = event.target.expensedescription.value;
-//     const category = event.target.expensecategory.value;  
-
-//     const users = document.querySelector('.users');
-//     const user = document.createElement('li');
-//     user.textContent = `${amount} - ${description} - ${category}`;  
-
-//     const editBtn = document.createElement('button');
-//     editBtn.className = 'edit-btn';
-//     editBtn.textContent = 'Edit Expense';
-//     editBtn.id = description;
-//     user.appendChild(editBtn);
-
-//     const deleteBtn = document.createElement('button');
-//     deleteBtn.className = 'delete-btn';
-//     deleteBtn.textContent = 'Delete Expense';
-//     deleteBtn.id = description;
-//     user.appendChild(deleteBtn);
-
-//     users.appendChild(user);
-
-//     const obj = {
-//         'expenseamount': amount,
-//         'expensedescription': description,
-//         'expensecategory': category  
-//     };
-//     const data = JSON.stringify(obj);
-//     localStorage.setItem(obj.expensedescription, data);  
-
-    
-//     document.querySelector('.users').addEventListener('click', function(event) {
-//         const key = event.target.id;
-
-//         if (event.target.classList.contains('edit-btn')) {
-//             const liElement = event.target.parentElement;
-//             if (liElement && liElement.tagName === 'LI') {
-//                 const userDataString = localStorage.getItem(key);
-//                 if (userDataString) {
-//                     const userData = JSON.parse(userDataString);
-                    
-//                     document.getElementById('expenseamount').value = userData.expenseamount;
-//                     document.getElementById('expensedescription').value = userData.expensedescription;  
-//                     document.getElementById('expensecategory').value = userData.expensecategory;
-//                 }
-//                 liElement.remove();
-
-//                 localStorage.removeItem(key);
-//             }
-//         } else if (event.target.classList.contains('delete-btn')) {
-//             const liElement = event.target.parentElement;
-//             if (liElement && liElement.tagName === 'LI') {
-//                 liElement.remove();
-//                 localStorage.removeItem(key);
-//             }
-//         }
-//     });
-
-
-//     event.target.expenseamount.value = ''; 
-//     event.target.expensedescription.value = '';  
-//     event.target.expensecategory.value = ''; 
-// }
-
-//
